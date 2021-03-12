@@ -75,4 +75,32 @@ news.addNews = (req, res) => {
   }
 };
 
+news.deleteNews = (req, res) => {
+  try {
+    const { id } = req.body;
+    News.findByIdAndUpdate(
+      { _id: id },
+      { $set: { isActive: false } },
+      { new: true, useFindAndModify: false }
+    )
+      .then(() => {
+        return res.status(200).json({
+          error: false,
+          message: "News Delete",
+        });
+      })
+      .catch((error) => {
+        return res.status(500).json({
+          error: true,
+          message: error.message,
+        });
+      });
+  } catch (error) {
+    return res.status(500).json({
+      error: true,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = news;
