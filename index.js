@@ -39,11 +39,7 @@ app.use(express.urlencoded({ extended: true }))
 
 //  register the models 
 require('./models/userModel')
-// require('./models/collegeDetailsModel')
-// require('./models/propertyDetailsModel')
-// require('./models/propertyOwerDetailsModel')
-// require('./models/feedbackModel')
-// require('./models/antiRaggingModel')
+require('./models/categoryModel')
 
 // // api routes
 const apiRoutes = require('./routes/api')
