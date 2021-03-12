@@ -112,7 +112,7 @@ category.deleteCategory = (req, res) => {
   }
 };
 
-category.updateCategory = (req, res) => {
+category.publishCategory = (req, res) => {
   try {
     const { id } = req.body;
     Category.findByIdAndUpdate(

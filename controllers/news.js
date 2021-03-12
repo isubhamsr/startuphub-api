@@ -44,6 +44,7 @@ news.addNews = (req, res) => {
           isTrending: isTrending,
           mainArticleLink: mainArticleLink,
           mainArticlePublisher: mainArticlePublisher,
+          postedBy: req.superAdmin._id,
         });
 
         news
@@ -87,6 +88,36 @@ news.deleteNews = (req, res) => {
         return res.status(200).json({
           error: false,
           message: "News Delete",
+        });
+      })
+      .catch((error) => {
+        return res.status(500).json({
+          error: true,
+          message: error.message,
+        });
+      });
+  } catch (error) {
+    return res.status(500).json({
+      error: true,
+      message: error.message,
+    });
+  }
+};
+
+news.fetchNewsForAdmin = (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit);
+    const skip = parseInt(req.query.skip);
+
+    News.find({})
+      .populate("category postedBy")
+      .skip(skip)
+      .limit(limit)
+      .then((data) => {
+        return res.status(200).json({
+          error: false,
+          message: "News Fetched",
+          data: data.reverse(),
         });
       })
       .catch((error) => {

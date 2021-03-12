@@ -11,11 +11,12 @@ route.post('/superadminsignin', adminAuth.superAdminSignin)
 route.post('/addcategory', adminVerify.isSuperAdmin, category.addCategory)
 route.get('/fetchcategory', adminVerify.isSuperAdmin, category.fetchCategoryForAdmin)
 route.delete('/deletecategory', adminVerify.isSuperAdmin, category.deleteCategory)
-route.put('/updatecategory', adminVerify.isSuperAdmin, category.updateCategory)
+route.put('/publishcategory', adminVerify.isSuperAdmin, category.publishCategory)
 
 route.get('/fetchcategoryuser', category.fetchCategoryForUser)
 
 route.post('/addnews', adminVerify.isSuperAdmin, news.addNews)
 route.delete('/deletenews', adminVerify.isSuperAdmin, news.deleteNews)
+route.get('/fetchnewsadmin', adminVerify.isSuperAdmin, news.fetchNewsForAdmin)
 
 module.exports = route
