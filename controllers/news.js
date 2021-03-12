@@ -134,4 +134,34 @@ news.fetchNewsForAdmin = (req, res) => {
   }
 };
 
+news.fetchNewsForUser = (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit);
+    const skip = parseInt(req.query.skip);
+
+    News.find({isActive: true})
+      .populate("category postedBy")
+      .skip(skip)
+      .limit(limit)
+      .then((data) => {
+        return res.status(200).json({
+          error: false,
+          message: "News Fetched",
+          data: data.reverse(),
+        });
+      })
+      .catch((error) => {
+        return res.status(500).json({
+          error: true,
+          message: error.message,
+        });
+      });
+  } catch (error) {
+    return res.status(500).json({
+      error: true,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = news;
