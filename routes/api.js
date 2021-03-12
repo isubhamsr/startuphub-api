@@ -10,5 +10,6 @@ route.post('/superadminsignin', adminAuth.superAdminSignin)
 route.post('/addcategory', adminVerify.isSuperAdmin, category.addCategory)
 route.get('/fetchcategory', adminVerify.isSuperAdmin, category.fetchCategory)
 route.delete('/deletecategory', adminVerify.isSuperAdmin, category.deleteCategory)
+route.put('/updatecategory', adminVerify.isSuperAdmin, category.updateCategory)
 
 module.exports = route

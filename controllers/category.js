@@ -62,7 +62,7 @@ category.addCategory = (req, res) => {
 
 category.fetchCategory = (req, res) => {
   try {
-    Category.find({}, { name: 1, _id: 1 })
+    Category.find({}, { name: 1, _id: 1, isActive: 1 })
       .then((details) => {
         return res.status(200).json({
           error: false,
@@ -96,6 +96,34 @@ category.deleteCategory = (req, res) => {
         return res.status(200).json({
           error: false,
           message: "Category Delete",
+        });
+      })
+      .catch((error) => {
+        return res.status(500).json({
+          error: true,
+          message: error.message,
+        });
+      });
+  } catch (error) {
+    return res.status(500).json({
+      error: true,
+      message: error.message,
+    });
+  }
+};
+
+category.updateCategory = (req, res) => {
+  try {
+    const { id } = req.body;
+    Category.findByIdAndUpdate(
+      { _id: id },
+      { $set: { isActive: true } },
+      { new: true, useFindAndModify: false }
+    )
+      .then(() => {
+        return res.status(200).json({
+          error: false,
+          message: "Category Updated",
         });
       })
       .catch((error) => {
