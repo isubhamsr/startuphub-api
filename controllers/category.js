@@ -60,7 +60,7 @@ category.addCategory = (req, res) => {
   }
 };
 
-category.fetchCategory = (req, res) => {
+category.fetchCategoryForAdmin = (req, res) => {
   try {
     Category.find({}, { name: 1, _id: 1, isActive: 1 })
       .then((details) => {
@@ -124,6 +124,31 @@ category.updateCategory = (req, res) => {
         return res.status(200).json({
           error: false,
           message: "Category Updated",
+        });
+      })
+      .catch((error) => {
+        return res.status(500).json({
+          error: true,
+          message: error.message,
+        });
+      });
+  } catch (error) {
+    return res.status(500).json({
+      error: true,
+      message: error.message,
+    });
+  }
+};
+
+
+category.fetchCategoryForUser = (req, res) => {
+  try {
+    Category.find({isActive: true}, { name: 1, _id: 1, isActive: 1 })
+      .then((details) => {
+        return res.status(200).json({
+          error: false,
+          message: "Category Fetched",
+          data: details,
         });
       })
       .catch((error) => {

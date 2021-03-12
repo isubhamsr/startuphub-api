@@ -40,6 +40,7 @@ app.use(express.urlencoded({ extended: true }))
 //  register the models 
 require('./models/userModel')
 require('./models/categoryModel')
+require('./models/newsModel')
 
 // // api routes
 const apiRoutes = require('./routes/api')
