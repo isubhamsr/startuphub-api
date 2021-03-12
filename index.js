@@ -38,7 +38,7 @@ app.use(express.urlencoded({ extended: true }))
 // app.use(bodyParser.json({ type: 'application/*+json' }))
 
 //  register the models 
-// require('./models/userModel')
+require('./models/userModel')
 // require('./models/collegeDetailsModel')
 // require('./models/propertyDetailsModel')
 // require('./models/propertyOwerDetailsModel')
