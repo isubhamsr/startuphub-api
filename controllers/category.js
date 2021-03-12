@@ -6,7 +6,7 @@ let category = {};
 category.addCategory = (req, res) => {
   try {
     const { name, description } = req.body;
-    const categoryName = name.charAt(0).toUpperCase() + name.slice(1)
+    const categoryName = name.charAt(0).toUpperCase() + name.slice(1);
     const pattern = new RegExp("^" + categoryName);
 
     if (!name || !description) {
@@ -60,28 +60,56 @@ category.addCategory = (req, res) => {
   }
 };
 
-category.fetchCategory = (req, res) =>{
-    try {
-        Category.find({}, {name : 1, _id: 1})
-        .then((details)=>{
-            return res.status(200).json({
-                error : false,
-                message : "Category Fetched",
-                data : details
-            })
-        })
-        .catch((error)=>{
-            return res.status(500).json({
-                error: true,
-                message: error.message,
-              });
-        })
-    } catch (error) {
+category.fetchCategory = (req, res) => {
+  try {
+    Category.find({}, { name: 1, _id: 1 })
+      .then((details) => {
+        return res.status(200).json({
+          error: false,
+          message: "Category Fetched",
+          data: details,
+        });
+      })
+      .catch((error) => {
         return res.status(500).json({
-            error: true,
-            message: error.message,
-          });
-    }
-}
+          error: true,
+          message: error.message,
+        });
+      });
+  } catch (error) {
+    return res.status(500).json({
+      error: true,
+      message: error.message,
+    });
+  }
+};
+
+category.deleteCategory = (req, res) => {
+  try {
+    const { id } = req.body;
+    Category.findByIdAndUpdate(
+      { _id: id },
+      { $set: { isActive: false } },
+      { new: true, useFindAndModify: false }
+    )
+      .then(() => {
+        return res.status(200).json({
+          error: false,
+          message: "Category Delete",
+        });
+      })
+      .catch((error) => {
+        return res.status(500).json({
+          error: true,
+          message: error.message,
+        });
+      });
+  } catch (error) {
+    return res.status(500).json({
+      error: true,
+      message: error.message,
+    });
+  }
+};
 
 module.exports = category;
