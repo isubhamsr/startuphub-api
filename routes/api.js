@@ -8,5 +8,6 @@ route.post('/superadminsignup', adminAuth.superAdminsSignup)
 route.post('/superadminsignin', adminAuth.superAdminSignin)
 
 route.post('/addcategory', adminVerify.isSuperAdmin, category.addCategory)
+route.get('/fetchcategory', adminVerify.isSuperAdmin, category.fetchCategory)
 
 module.exports = route
