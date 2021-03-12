@@ -139,7 +139,7 @@ news.fetchNewsForUser = (req, res) => {
     const limit = parseInt(req.query.limit);
     const skip = parseInt(req.query.skip);
 
-    News.find({isActive: true})
+    News.find({ isActive: true })
       .populate("category postedBy")
       .skip(skip)
       .limit(limit)
@@ -148,6 +148,34 @@ news.fetchNewsForUser = (req, res) => {
           error: false,
           message: "News Fetched",
           data: data.reverse(),
+        });
+      })
+      .catch((error) => {
+        return res.status(500).json({
+          error: true,
+          message: error.message,
+        });
+      });
+  } catch (error) {
+    return res.status(500).json({
+      error: true,
+      message: error.message,
+    });
+  }
+};
+
+news.republishNews = (req, res) => {
+  try {
+    const { id } = req.body;
+    News.findByIdAndUpdate(
+      { _id: id },
+      { $set: { isActive: true } },
+      { new: true, useFindAndModify: false }
+    )
+      .then(() => {
+        return res.status(200).json({
+          error: false,
+          message: "News Republished",
         });
       })
       .catch((error) => {

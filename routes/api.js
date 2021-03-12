@@ -18,6 +18,7 @@ route.get('/fetchcategoryuser', category.fetchCategoryForUser)
 route.post('/addnews', adminVerify.isSuperAdmin, news.addNews)
 route.delete('/deletenews', adminVerify.isSuperAdmin, news.deleteNews)
 route.get('/fetchnewsadmin', adminVerify.isSuperAdmin, news.fetchNewsForAdmin)
+route.put('/republishnews', adminVerify.isSuperAdmin, news.republishNews)
 route.get('/fetchnewsuser', news.fetchNewsForUser)
 
 module.exports = route
