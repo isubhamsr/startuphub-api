@@ -7,6 +7,7 @@ const news = require('../controllers/news')
 
 route.post('/superadminsignup', adminAuth.superAdminsSignup)
 route.post('/superadminsignin', adminAuth.superAdminSignin)
+route.get('/verifytoken/:id', adminAuth.verifyUserToken)
 
 route.post('/addcategory', adminVerify.isSuperAdmin, category.addCategory)
 route.get('/fetchcategory', adminVerify.isSuperAdmin, category.fetchCategoryForAdmin)

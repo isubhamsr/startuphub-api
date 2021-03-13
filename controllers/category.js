@@ -140,7 +140,6 @@ category.publishCategory = (req, res) => {
   }
 };
 
-
 category.fetchCategoryForUser = (req, res) => {
   try {
     Category.find({isActive: true}, { name: 1, _id: 1, isActive: 1 })
