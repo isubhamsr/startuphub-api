@@ -17,7 +17,7 @@ news.addNews = (req, res) => {
       mainArticlePublisher,
     } = req.body;
 
-    if (!photo || !title || !description || !audio || !category) {
+    if (!photo || !title || !description || !category) {
       return res.status(401).json({
         error: true,
         message: "Fill all the feilds",
@@ -110,7 +110,8 @@ news.fetchNewsForAdmin = (req, res) => {
     const skip = parseInt(req.query.skip);
 
     News.find({})
-      .populate("category postedBy")
+      .populate("category", "isActive _id name description")
+      .populate("postedBy", "name email isActive _id uniqueId")
       .skip(skip)
       .limit(limit)
       .then((data) => {
@@ -140,7 +141,8 @@ news.fetchNewsForUser = (req, res) => {
     const skip = parseInt(req.query.skip);
 
     News.find({ isActive: true })
-      .populate("category postedBy")
+      .populate("category", "isActive _id name description")
+      .populate("postedBy", "name email isActive _id uniqueId")
       .skip(skip)
       .limit(limit)
       .then((data) => {
@@ -191,5 +193,30 @@ news.republishNews = (req, res) => {
     });
   }
 };
+
+news.totalNews = (req, res) => {
+    try {
+        News.find({}, {_id: 1})
+        .countDocuments()
+        .then((count)=>{
+            return res.status(200).json({
+                error: false,
+                message: "Total News Count Fetched",
+                count: count
+            })
+        })
+        .catch((error)=>{
+            return res.status(500).json({
+                error: true,
+                message: error.message,
+              });
+        })
+    } catch (error) {
+        return res.status(500).json({
+            error: true,
+            message: error.message,
+          });
+    }
+}
 
 module.exports = news;

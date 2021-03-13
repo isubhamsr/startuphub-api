@@ -64,11 +64,23 @@ category.fetchCategoryForAdmin = (req, res) => {
   try {
     Category.find({}, { name: 1, _id: 1, isActive: 1 })
       .then((details) => {
-        return res.status(200).json({
-          error: false,
-          message: "Category Fetched",
-          data: details,
-        });
+        Category.find({}, { name: 1, _id: 1, isActive: 1 })
+        .countDocuments()
+        .then((count)=>{
+          return res.status(200).json({
+            error: false,
+            message: "Category Fetched",
+            data: details,
+            count: count
+          });
+        })
+        .catch((error)=>{
+          return res.status(500).json({
+            error: true,
+            message: error.message,
+          });
+        })
+        
       })
       .catch((error) => {
         return res.status(500).json({
