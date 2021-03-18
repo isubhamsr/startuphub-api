@@ -203,13 +203,31 @@ news.fetchAllNewsForUser = (req, res) => {
           return res.status(401).json({
             error: true,
             message: "News Not Found",
+            totalItem: 0,
+            pageSize: 0,
+            distribution: 0,
           });
         }
-        return res.status(200).json({
-          error: false,
-          message: "News Fetched",
-          data: data,
-        });
+        News.find({ isActive: true }, { _id: 1 })
+          .countDocuments()
+          .then((count) => {
+            const pageSize = limit;
+            const distribution = Math.ceil(count / pageSize);
+            return res.status(200).json({
+              error: false,
+              message: "News Fetched",
+              data: data,
+              totalItem: count,
+              pageSize: pageSize,
+              distribution: distribution,
+            });
+          })
+          .catch((error) => {
+            return res.status(500).json({
+              error: true,
+              message: error.message,
+            });
+          });
       })
       .catch((error) => {
         return res.status(500).json({
@@ -239,6 +257,9 @@ news.fetchStartupNewsForUser = (req, res) => {
           return res.status(401).json({
             error: true,
             message: "Category Not Found",
+            totalItem: 0,
+            pageSize: 0,
+            distribution: 0,
           });
         }
         News.find({ $and: [{ isActive: true }, { category: details._id }] })
@@ -252,14 +273,35 @@ news.fetchStartupNewsForUser = (req, res) => {
               return res.status(401).json({
                 error: true,
                 message: "News Not Found",
+                totalItem: 0,
+                pageSize: 0,
+                distribution: 0,
               });
             }
 
-            return res.status(200).json({
-              error: false,
-              message: "News Fetched",
-              data: data,
-            });
+            News.find(
+              { $and: [{ isActive: true }, { category: details._id }] },
+              { _id: 1 }
+            )
+              .countDocuments()
+              .then((count) => {
+                const pageSize = limit;
+                const distribution = Math.ceil(count / pageSize);
+                return res.status(200).json({
+                  error: false,
+                  message: "News Fetched",
+                  data: data,
+                  totalItem: count,
+                  pageSize: pageSize,
+                  distribution: distribution,
+                });
+              })
+              .catch((error) => {
+                return res.status(500).json({
+                  error: true,
+                  message: error.message,
+                });
+              });
           })
           .catch((error) => {
             return res.status(500).json({
@@ -296,6 +338,9 @@ news.fetchBusinessNewsForUser = (req, res) => {
           return res.status(401).json({
             error: true,
             message: "Category Not Found",
+            totalItem: 0,
+            pageSize: 0,
+            distribution: 0,
           });
         }
         News.find({ $and: [{ isActive: true }, { category: details._id }] })
@@ -309,14 +354,35 @@ news.fetchBusinessNewsForUser = (req, res) => {
               return res.status(401).json({
                 error: true,
                 message: "News Not Found",
+                totalItem: 0,
+                pageSize: 0,
+                distribution: 0,
               });
             }
 
-            return res.status(200).json({
-              error: false,
-              message: "News Fetched",
-              data: data,
-            });
+            News.find(
+              { $and: [{ isActive: true }, { category: details._id }] },
+              { _id: 1 }
+            )
+              .countDocuments()
+              .then((count) => {
+                const pageSize = limit;
+                const distribution = Math.ceil(count / pageSize);
+                return res.status(200).json({
+                  error: false,
+                  message: "News Fetched",
+                  data: data,
+                  totalItem: count,
+                  pageSize: pageSize,
+                  distribution: distribution,
+                });
+              })
+              .catch((error) => {
+                return res.status(500).json({
+                  error: true,
+                  message: error.message,
+                });
+              });
           })
           .catch((error) => {
             return res.status(500).json({
@@ -353,6 +419,9 @@ news.fetchFundingNewsForUser = (req, res) => {
           return res.status(401).json({
             error: true,
             message: "Category Not Found",
+            totalItem: 0,
+            pageSize: 0,
+            distribution: 0,
           });
         }
         News.find({ $and: [{ isActive: true }, { category: details._id }] })
@@ -366,14 +435,35 @@ news.fetchFundingNewsForUser = (req, res) => {
               return res.status(401).json({
                 error: true,
                 message: "News Not Found",
+                totalItem: 0,
+                pageSize: 0,
+                distribution: 0,
               });
             }
 
-            return res.status(200).json({
-              error: false,
-              message: "News Fetched",
-              data: data,
-            });
+            News.find(
+              { $and: [{ isActive: true }, { category: details._id }] },
+              { _id: 1 }
+            )
+              .countDocuments()
+              .then((count) => {
+                const pageSize = limit;
+                const distribution = Math.ceil(count / pageSize);
+                return res.status(200).json({
+                  error: false,
+                  message: "News Fetched",
+                  data: data,
+                  totalItem: count,
+                  pageSize: pageSize,
+                  distribution: distribution,
+                });
+              })
+              .catch((error) => {
+                return res.status(500).json({
+                  error: true,
+                  message: error.message,
+                });
+              });
           })
           .catch((error) => {
             return res.status(500).json({
@@ -410,6 +500,9 @@ news.fetchAcquisitionNewsForUser = (req, res) => {
           return res.status(401).json({
             error: true,
             message: "Category Not Found",
+            totalItem: 0,
+            pageSize: 0,
+            distribution: 0,
           });
         }
         News.find({ $and: [{ isActive: true }, { category: details._id }] })
@@ -423,14 +516,35 @@ news.fetchAcquisitionNewsForUser = (req, res) => {
               return res.status(401).json({
                 error: true,
                 message: "News Not Found",
+                totalItem: 0,
+                pageSize: 0,
+                distribution: 0,
               });
             }
 
-            return res.status(200).json({
-              error: false,
-              message: "News Fetched",
-              data: data,
-            });
+            News.find(
+              { $and: [{ isActive: true }, { category: details._id }] },
+              { _id: 1 }
+            )
+              .countDocuments()
+              .then((count) => {
+                const pageSize = limit;
+                const distribution = Math.ceil(count / pageSize);
+                return res.status(200).json({
+                  error: false,
+                  message: "News Fetched",
+                  data: data,
+                  totalItem: count,
+                  pageSize: pageSize,
+                  distribution: distribution,
+                });
+              })
+              .catch((error) => {
+                return res.status(500).json({
+                  error: true,
+                  message: error.message,
+                });
+              });
           })
           .catch((error) => {
             return res.status(500).json({
@@ -467,6 +581,9 @@ news.fetchStartupIdeaForUser = (req, res) => {
           return res.status(401).json({
             error: true,
             message: "Category Not Found",
+            totalItem: 0,
+            pageSize: 0,
+            distribution: 0,
           });
         }
         News.find({ $and: [{ isActive: true }, { category: details._id }] })
@@ -480,14 +597,35 @@ news.fetchStartupIdeaForUser = (req, res) => {
               return res.status(401).json({
                 error: true,
                 message: "News Not Found",
+                totalItem: 0,
+                pageSize: 0,
+                distribution: 0,
               });
             }
 
-            return res.status(200).json({
-              error: false,
-              message: "News Fetched",
-              data: data,
-            });
+            News.find(
+              { $and: [{ isActive: true }, { category: details._id }] },
+              { _id: 1 }
+            )
+              .countDocuments()
+              .then((count) => {
+                const pageSize = limit;
+                const distribution = Math.ceil(count / pageSize);
+                return res.status(200).json({
+                  error: false,
+                  message: "News Fetched",
+                  data: data,
+                  totalItem: count,
+                  pageSize: pageSize,
+                  distribution: distribution,
+                });
+              })
+              .catch((error) => {
+                return res.status(500).json({
+                  error: true,
+                  message: error.message,
+                });
+              });
           })
           .catch((error) => {
             return res.status(500).json({
@@ -526,13 +664,34 @@ news.fetchTrendingNewsForUser = (req, res) => {
           return res.status(401).json({
             error: true,
             message: "News Not Found",
+            totalItem: 0,
+            pageSize: 0,
+            distribution: 0,
           });
         }
-        return res.status(200).json({
-          error: false,
-          message: "News Fetched",
-          data: data,
-        });
+        News.find(
+          { $and: [{ isActive: true }, { isTrending: true }] },
+          { _id: 1 }
+        )
+          .countDocuments()
+          .then((count) => {
+            const pageSize = limit;
+            const distribution = Math.ceil(count / pageSize);
+            return res.status(200).json({
+              error: false,
+              message: "News Fetched",
+              data: data,
+              totalItem: count,
+              pageSize: pageSize,
+              distribution: distribution,
+            });
+          })
+          .catch((error) => {
+            return res.status(500).json({
+              error: true,
+              message: error.message,
+            });
+          });
       })
       .catch((error) => {
         return res.status(500).json({
