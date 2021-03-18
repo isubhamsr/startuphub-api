@@ -15,7 +15,7 @@ const categorySchema = new mongoose.Schema(
     },
     isActive: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     postedBy: {
       type: ObjectId,

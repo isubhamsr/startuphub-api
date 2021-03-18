@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const gTTS = require("gtts");
+const fs = require("fs");
 const News = mongoose.model("News");
 
 let news = {};
@@ -9,7 +11,6 @@ news.addNews = (req, res) => {
       photo,
       title,
       description,
-      audio,
       category,
       isImportant,
       isTrending,
@@ -24,6 +25,8 @@ news.addNews = (req, res) => {
       });
     }
 
+    let audio = null;
+
     News.findOne({ title: title }, { _id: 1 })
       .then((details) => {
         if (details) {
@@ -32,6 +35,54 @@ news.addNews = (req, res) => {
             message: "This News already added",
           });
         }
+
+        const gtts = new gTTS(`${title} ${description}`, "en");
+        
+        // const filePath = `../audios/${Date.now()}-output.mp3`;
+        const filePath = `${Date.now()}output.mp3`;
+
+        gtts.save(filePath, function (error, result) {
+          if (error) {
+            fs.unlinkSync(filePath);
+            return res.status(500).json({
+              error: true,
+              message: "Something problem in audio conversion",
+            });
+          }
+          fs.createWriteStream(filePath, function (error, fileData) {
+            if (error) {
+                fs.unlinkSync(filePath);
+              return res.status(500).json({
+                error: true,
+                message: "Something problem in audio file access",
+              });
+            }
+            console.log("under fs");
+            const data = new FormData();
+            data.append("file", fileData);
+            data.append("upload_preset", "dukandari");
+            data.append("cloud_name", "dkcwzsz7t");
+            fetch("https://api.cloudinary.com/v1_1/dkcwzsz7t/image/upload", {
+                headers: {
+                    'Content-Type': 'audio/mpeg',
+                  },
+              method: "post",
+              body: data,
+            })
+              .then((res) => res.json())
+              .then((data) => {
+                audio = data.secure_url;
+                fs.unlinkSync(filePath);
+              })
+              .catch((error) => {
+                fs.unlinkSync(filePath);
+                return res.status(500).json({
+                  error: true,
+                  message: error.message,
+                });
+              });
+          });
+        });
 
         const news = new News({
           photo: photo,
@@ -195,28 +246,28 @@ news.republishNews = (req, res) => {
 };
 
 news.totalNews = (req, res) => {
-    try {
-        News.find({}, {_id: 1})
-        .countDocuments()
-        .then((count)=>{
-            return res.status(200).json({
-                error: false,
-                message: "Total News Count Fetched",
-                count: count
-            })
-        })
-        .catch((error)=>{
-            return res.status(500).json({
-                error: true,
-                message: error.message,
-              });
-        })
-    } catch (error) {
+  try {
+    News.find({}, { _id: 1 })
+      .countDocuments()
+      .then((count) => {
+        return res.status(200).json({
+          error: false,
+          message: "Total News Count Fetched",
+          count: count,
+        });
+      })
+      .catch((error) => {
         return res.status(500).json({
-            error: true,
-            message: error.message,
-          });
-    }
-}
+          error: true,
+          message: error.message,
+        });
+      });
+  } catch (error) {
+    return res.status(500).json({
+      error: true,
+      message: error.message,
+    });
+  }
+};
 
 module.exports = news;

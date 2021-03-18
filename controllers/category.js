@@ -176,4 +176,28 @@ category.fetchCategoryForUser = (req, res) => {
   }
 };
 
+category.fetchCategoryForAddNews = (req, res) => {
+  try {
+    Category.find({isActive: true}, { name: 1, _id: 1, isActive: 1 })
+      .then((details) => {
+        return res.status(200).json({
+          error: false,
+          message: "Category Fetched",
+          data: details,
+        });
+      })
+      .catch((error) => {
+        return res.status(500).json({
+          error: true,
+          message: error.message,
+        });
+      });
+  } catch (error) {
+    return res.status(500).json({
+      error: true,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = category;

@@ -13,6 +13,7 @@ route.post('/addcategory', adminVerify.isSuperAdmin, category.addCategory)
 route.get('/fetchcategory', adminVerify.isSuperAdmin, category.fetchCategoryForAdmin)
 route.delete('/deletecategory', adminVerify.isSuperAdmin, category.deleteCategory)
 route.put('/publishcategory', adminVerify.isSuperAdmin, category.publishCategory)
+route.get('/fetchcategoryaddnews', adminVerify.isSuperAdmin, category.fetchCategoryForAddNews)
 
 route.get('/fetchcategoryuser', category.fetchCategoryForUser)
 
