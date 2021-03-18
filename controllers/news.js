@@ -453,6 +453,44 @@ news.fetchAcquisitionNewsForUser = (req, res) => {
   }
 };
 
+news.fetchTrendingNewsForUser = (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit);
+    const skip = parseInt(req.query.skip);
+
+    News.find({ $and: [{ isActive: true }, { isTrending: true }] })
+      .populate("category", "isActive _id name description")
+      .populate("postedBy", "name email isActive _id uniqueId")
+      .sort({ _id: -1 })
+      .skip(skip)
+      .limit(limit)
+      .then((data) => {
+        if (data.length === 0) {
+          return res.status(401).json({
+            error: true,
+            message: "News Not Found",
+          });
+        }
+        return res.status(200).json({
+          error: false,
+          message: "News Fetched",
+          data: data,
+        });
+      })
+      .catch((error) => {
+        return res.status(500).json({
+          error: true,
+          message: error.message,
+        });
+      });
+  } catch (error) {
+    return res.status(500).json({
+      error: true,
+      message: error.message,
+    });
+  }
+};
+
 news.republishNews = (req, res) => {
   try {
     const { id } = req.body;
