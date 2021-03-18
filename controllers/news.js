@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const gTTS = require("gtts");
 const fs = require("fs");
 const News = mongoose.model("News");
+const Category = mongoose.model("Category");
 
 let news = {};
 
@@ -37,7 +38,7 @@ news.addNews = (req, res) => {
         }
 
         const gtts = new gTTS(`${title} ${description}`, "en");
-        
+
         // const filePath = `../audios/${Date.now()}-output.mp3`;
         const filePath = `${Date.now()}output.mp3`;
 
@@ -51,7 +52,7 @@ news.addNews = (req, res) => {
           }
           fs.createWriteStream(filePath, function (error, fileData) {
             if (error) {
-                fs.unlinkSync(filePath);
+              fs.unlinkSync(filePath);
               return res.status(500).json({
                 error: true,
                 message: "Something problem in audio file access",
@@ -63,9 +64,9 @@ news.addNews = (req, res) => {
             data.append("upload_preset", "dukandari");
             data.append("cloud_name", "dkcwzsz7t");
             fetch("https://api.cloudinary.com/v1_1/dkcwzsz7t/image/upload", {
-                headers: {
-                    'Content-Type': 'audio/mpeg',
-                  },
+              headers: {
+                "Content-Type": "audio/mpeg",
+              },
               method: "post",
               body: data,
             })
@@ -186,7 +187,7 @@ news.fetchNewsForAdmin = (req, res) => {
   }
 };
 
-news.fetchNewsForUser = (req, res) => {
+news.fetchAllNewsForUser = (req, res) => {
   try {
     const limit = parseInt(req.query.limit);
     const skip = parseInt(req.query.skip);
@@ -194,14 +195,78 @@ news.fetchNewsForUser = (req, res) => {
     News.find({ isActive: true })
       .populate("category", "isActive _id name description")
       .populate("postedBy", "name email isActive _id uniqueId")
+      .sort({ _id: -1 })
       .skip(skip)
       .limit(limit)
       .then((data) => {
+        if (data.length === 0) {
+          return res.status(401).json({
+            error: true,
+            message: "News Not Found",
+          });
+        }
         return res.status(200).json({
           error: false,
           message: "News Fetched",
-          data: data.reverse(),
+          data: data,
         });
+      })
+      .catch((error) => {
+        return res.status(500).json({
+          error: true,
+          message: error.message,
+        });
+      });
+  } catch (error) {
+    return res.status(500).json({
+      error: true,
+      message: error.message,
+    });
+  }
+};
+
+news.fetchStartupNewsForUser = (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit);
+    const skip = parseInt(req.query.skip);
+
+    Category.findOne(
+      { $and: [{ isActive: true }, { name: "Startup News" }] },
+      { _id: 1 }
+    )
+      .then((details) => {
+        if (details === null) {
+          return res.status(401).json({
+            error: true,
+            message: "Category Not Found",
+          });
+        }
+        News.find({ $and: [{ isActive: true }, { category: details._id }] })
+          .populate("category", "isActive _id name")
+          .populate("postedBy", "name email isActive _id uniqueId")
+          .sort({ _id: -1 })
+          .skip(skip)
+          .limit(limit)
+          .then((data) => {
+            if (data.length === 0) {
+              return res.status(401).json({
+                error: true,
+                message: "News Not Found",
+              });
+            }
+
+            return res.status(200).json({
+              error: false,
+              message: "News Fetched",
+              data: data,
+            });
+          })
+          .catch((error) => {
+            return res.status(500).json({
+              error: true,
+              message: error.message,
+            });
+          });
       })
       .catch((error) => {
         return res.status(500).json({

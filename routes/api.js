@@ -22,6 +22,8 @@ route.delete('/deletenews', adminVerify.isSuperAdmin, news.deleteNews)
 route.get('/fetchnewsadmin', adminVerify.isSuperAdmin, news.fetchNewsForAdmin)
 route.put('/republishnews', adminVerify.isSuperAdmin, news.republishNews)
 route.get('/totoalnews', adminVerify.isSuperAdmin, news.totalNews)
-route.get('/fetchnewsuser', news.fetchNewsForUser)
+
+route.get('/fetchallnews', news.fetchAllNewsForUser)
+route.get('/fetchstartupnews', news.fetchStartupNewsForUser)
 
 module.exports = route
