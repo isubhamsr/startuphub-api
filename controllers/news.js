@@ -453,6 +453,63 @@ news.fetchAcquisitionNewsForUser = (req, res) => {
   }
 };
 
+news.fetchStartupIdeaForUser = (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit);
+    const skip = parseInt(req.query.skip);
+
+    Category.findOne(
+      { $and: [{ isActive: true }, { name: "Startup Ideas" }] },
+      { _id: 1 }
+    )
+      .then((details) => {
+        if (details === null) {
+          return res.status(401).json({
+            error: true,
+            message: "Category Not Found",
+          });
+        }
+        News.find({ $and: [{ isActive: true }, { category: details._id }] })
+          .populate("category", "isActive _id name")
+          .populate("postedBy", "name email isActive _id uniqueId")
+          .sort({ _id: -1 })
+          .skip(skip)
+          .limit(limit)
+          .then((data) => {
+            if (data.length === 0) {
+              return res.status(401).json({
+                error: true,
+                message: "News Not Found",
+              });
+            }
+
+            return res.status(200).json({
+              error: false,
+              message: "News Fetched",
+              data: data,
+            });
+          })
+          .catch((error) => {
+            return res.status(500).json({
+              error: true,
+              message: error.message,
+            });
+          });
+      })
+      .catch((error) => {
+        return res.status(500).json({
+          error: true,
+          message: error.message,
+        });
+      });
+  } catch (error) {
+    return res.status(500).json({
+      error: true,
+      message: error.message,
+    });
+  }
+};
+
 news.fetchTrendingNewsForUser = (req, res) => {
   try {
     const limit = parseInt(req.query.limit);

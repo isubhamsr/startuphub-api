@@ -29,5 +29,6 @@ route.get('/fetchbusinessnews', news.fetchBusinessNewsForUser)
 route.get('/fetchfundingnews', news.fetchFundingNewsForUser)
 route.get('/fetchacquisitionnews', news.fetchAcquisitionNewsForUser)
 route.get('/fetchtrendingnews', news.fetchTrendingNewsForUser)
+route.get('/fetchstartupideas', news.fetchStartupIdeaForUser)
 
 module.exports = route
