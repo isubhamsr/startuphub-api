@@ -239,4 +239,33 @@ adminAuth.verifyUserToken = (req, res) => {
   }
 };
 
+adminAuth.logout = (req, res) => {
+  try {
+    const { id } = req.params;
+
+    User.findByIdAndUpdate(
+      { _id: id },
+      { $set: { token: "" } },
+      { new: true, useFindAndModify: false }
+    )
+      .then(() => {
+        return res.status(200).json({
+          error: false,
+          message: "LogOut Successfull",
+        });
+      })
+      .catch((error) => {
+        return res.status(500).json({
+          error: true,
+          message: error.message,
+        });
+      });
+  } catch (error) {
+    return res.status(500).json({
+      error: true,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = adminAuth;
