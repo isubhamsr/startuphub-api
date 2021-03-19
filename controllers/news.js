@@ -37,53 +37,53 @@ news.addNews = (req, res) => {
           });
         }
 
-        const gtts = new gTTS(`${title} ${description}`, "en");
+        // const gtts = new gTTS(`${title} ${description}`, "en");
 
-        // const filePath = `../audios/${Date.now()}-output.mp3`;
-        const filePath = `${Date.now()}output.mp3`;
+        // // const filePath = `../audios/${Date.now()}-output.mp3`;
+        // const filePath = `${Date.now()}output.mp3`;
 
-        gtts.save(filePath, function (error, result) {
-          if (error) {
-            fs.unlinkSync(filePath);
-            return res.status(500).json({
-              error: true,
-              message: "Something problem in audio conversion",
-            });
-          }
-          fs.createWriteStream(filePath, function (error, fileData) {
-            if (error) {
-              fs.unlinkSync(filePath);
-              return res.status(500).json({
-                error: true,
-                message: "Something problem in audio file access",
-              });
-            }
-            console.log("under fs");
-            const data = new FormData();
-            data.append("file", fileData);
-            data.append("upload_preset", "dukandari");
-            data.append("cloud_name", "dkcwzsz7t");
-            fetch("https://api.cloudinary.com/v1_1/dkcwzsz7t/image/upload", {
-              headers: {
-                "Content-Type": "audio/mpeg",
-              },
-              method: "post",
-              body: data,
-            })
-              .then((res) => res.json())
-              .then((data) => {
-                audio = data.secure_url;
-                fs.unlinkSync(filePath);
-              })
-              .catch((error) => {
-                fs.unlinkSync(filePath);
-                return res.status(500).json({
-                  error: true,
-                  message: error.message,
-                });
-              });
-          });
-        });
+        // gtts.save(filePath, function (error, result) {
+        //   if (error) {
+        //     fs.unlinkSync(filePath);
+        //     return res.status(500).json({
+        //       error: true,
+        //       message: "Something problem in audio conversion",
+        //     });
+        //   }
+        //   fs.createWriteStream(filePath, function (error, fileData) {
+        //     if (error) {
+        //       fs.unlinkSync(filePath);
+        //       return res.status(500).json({
+        //         error: true,
+        //         message: "Something problem in audio file access",
+        //       });
+        //     }
+        //     console.log("under fs");
+        //     const data = new FormData();
+        //     data.append("file", fileData);
+        //     data.append("upload_preset", "dukandari");
+        //     data.append("cloud_name", "dkcwzsz7t");
+        //     fetch("https://api.cloudinary.com/v1_1/dkcwzsz7t/image/upload", {
+        //       headers: {
+        //         "Content-Type": "audio/mpeg",
+        //       },
+        //       method: "post",
+        //       body: data,
+        //     })
+        //       .then((res) => res.json())
+        //       .then((data) => {
+        //         audio = data.secure_url;
+        //         fs.unlinkSync(filePath);
+        //       })
+        //       .catch((error) => {
+        //         fs.unlinkSync(filePath);
+        //         return res.status(500).json({
+        //           error: true,
+        //           message: error.message,
+        //         });
+        //       });
+        //   });
+        // });
 
         const news = new News({
           photo: photo,
