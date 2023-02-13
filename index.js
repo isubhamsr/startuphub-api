@@ -38,12 +38,9 @@ app.use(express.urlencoded({ extended: true }))
 // app.use(bodyParser.json({ type: 'application/*+json' }))
 
 //  register the models 
-// require('./models/userModel')
-// require('./models/collegeDetailsModel')
-// require('./models/propertyDetailsModel')
-// require('./models/propertyOwerDetailsModel')
-// require('./models/feedbackModel')
-// require('./models/antiRaggingModel')
+require('./models/userModel')
+require('./models/categoryModel')
+require('./models/newsModel')
 
 // // api routes
 const apiRoutes = require('./routes/api')

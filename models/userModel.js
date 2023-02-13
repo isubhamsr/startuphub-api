@@ -59,18 +59,6 @@ const userSchema = new mongoose.Schema({
     isStuff : {
         type : Boolean,
         default : false
-    },
-    isStudent : {
-        type : Boolean,
-        default : false
-    },
-    isWorkingPerson : {
-        type : Boolean,
-        default : false
-    },
-    isPropertyOwner : {
-        type : Boolean,
-        default : false
     }
 }, {
     timestamps : true
